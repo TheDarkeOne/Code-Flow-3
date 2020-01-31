@@ -11,13 +11,25 @@ defmodule CodeFlow.With do
   Defining a workflow or "Code Flow" using a `with` statement.
   """
   alias CodeFlow.Schemas.Order
-  # alias CodeFlow.Fake.Customers
-  # alias CodeFlow.Fake.Orders
-  # alias CodeFlow.Fake.Items
+  alias CodeFlow.Fake.Customers
+  alias CodeFlow.Fake.Orders, as: FakeOrder
+  alias CodeFlow.Fake.Items
 
   @spec place_new_order(customer_id :: integer, item_id :: integer, quantity :: integer) ::
           {:ok, Order.t()} | {:error, String.t()}
   def place_new_order(_customer_id, _item_id, _quantity) do
+    with {:ok, customer} <- Customers.find(customer_id),
+            {:ok, item} <- Items.find(item_id),
+            {:ok, order} <- Orders.new(customer),
+            {:ok, order} <- Orders.add_item(order, item, quantity),
+            :ok <- Customers.notify(customer, {:order_placed, order}) do
+              {:ok, order}
+        else
+          {:error, :timeout} ->
+            {:error, "Timed out attempting to notify customer"}
 
+          error ->
+            error
+    end
   end
 end

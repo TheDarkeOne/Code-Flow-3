@@ -16,7 +16,45 @@ defmodule CodeFlow.Railway do
   Works well when the functions are designed to pass the output of one
   step as the input of the next function.
   """
-  def award_points(%User{} = _user, _inc_point_value) do
-
+  def award_points(%User{} = user, inc_point_value) do
+    user
+    |> validate_is_active()
+    |> validate_at_least_age(16)
+    |> check_name_blacklist()
+    |> increment_points(inc_point_value)
   end
+
+  def validate_is_active(%User{active: true} = user) do
+    {:ok, user}
+  end
+
+  def validate_is_active(_user) do
+    {:error, "Not an active User"}
+  end
+
+  def validate_at_least_age({:ok, %User{age: age} = user}, cutoff_age) when age >= cutoff_age do
+    {:ok, user}
+  end
+
+  def validate_at_least_age({:ok, _user}, _cutoff_age) do
+    {:error, "User age is below the cutoff"}
+  end
+
+  def validate_at_least_age(error, _cutoff_age), do: {:error, "Wrong"}
+
+  def check_name_blacklist({:ok, %User{name: name} = user}) do
+    case name |> Enum.member?(["Tom", "Tim", "Tammy"]) do
+      true -> {:error, "User #{inspect(name)} is blacklisted"}
+
+      _ -> {:ok, "User #{inspect(name)} is not black listed"}
+    end
+  end
+
+  def check_name_blacklist({:error, _reason} = error), do: {:error, "Wrong"}
+
+  def increment_points({:ok, %User{points: points} = user}, inc_by) do
+    {:ok, %User{user | points: points + inc_by}}
+  end
+
+  ef increment_points(error, _inc_by), do: {:error, "Wrong"}
 end

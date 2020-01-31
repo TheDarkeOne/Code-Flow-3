@@ -7,40 +7,41 @@
 # information.
 # ---
 defmodule CodeFlow.Case do
-  @moduledoc """
-  Fix or complete the code to make the tests pass.
-  """
-  alias CodeFlow.Schemas.User
-  alias CodeFlow.Fake.Users
+    @moduledoc """
+    Fix or complete the code to make the tests pass.
+    """
+    alias CodeFlow.Schemas.User
+    alias CodeFlow.Fake.Users
 
-  def classify_user(user) do
-    case user do
-      %User{age: nil} -> {:error, "Age required"}
+    def classify_user(user) do
+      case user do
+        %User{age: nil} -> {:error, "Age required"}
 
-      %User{age: age} when age >= 18 -> {:ok, :adult}
+        %User{age: age} when age >= 18 -> {:ok, :adult}
 
-      %User{age: age} when age < 18 -> {:ok, :minor}
+        %User{age: age} when age < 18 -> {:ok, :minor}
 
-      _ ->
-          {:error, :invalid}
+        _ ->
+            {:error, :invalid}
+      end
     end
-  end
 
-  def read_file(filename) do
-    case File.read(filename) do
-      {:ok, file_contents} ->
-        {:ok, file_contents}
+    def read_file(filename) do
+      case File.read(filename) do
+        {:ok, file_contents} ->
+          {:ok, file_contents}
 
-      {:error, :enoent} ->
-        {:error, "File not found"} 
+        {:error, :enoent} ->
+          {:error, "File not found"} 
+      end
     end
-  end
 
-  def find_user(user_id) do
-    case Users.one(user_id)
-      %User{} = user -> {:ok, user}
+    def find_user(user_id) do
+      case Users.one(user_id) do
+        %User{} = user -> {:ok, user}
 
-      nil-> {:error, "User not found"}
+        nil-> {:error, "User not found"}
 
+    end
   end
 end

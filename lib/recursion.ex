@@ -16,8 +16,16 @@ defmodule CodeFlow.Recursion do
   @doc """
   Sum a list of OrderItems to compute the order total.
   """
-  def order_total(_order_items) do
+  def order_total(order_items) do
+    do_order_total(order_items, 0)
+  end
 
+  defp do_order_total([%OrderItem{} = order_item | rest], total) do
+    do_order_total(rest, (order_item.quantity * order_item.item.price) + total)
+  end
+
+  defp do_order_total([], total) do
+    total
   end
 
   @doc """
@@ -25,8 +33,20 @@ defmodule CodeFlow.Recursion do
   query to an SQL database. This is just to practice conditionally incrementing
   a counter and looping using recursion.
   """
-  def count_active(_customers) do
+  def count_active(customers) do
+    do_count_active(customers, 0)
+  end
 
+  def do_count_active([%Customers{active: true} | rest], total) do
+    do_count_active(rest, acc + 1)
+  end
+
+  def do_count_active([_customer | rest], total) do
+    do_count_active(rest, acc)
+  end
+
+  defp do_count_active([], acc) do
+    acc
   end
 
   @doc """
@@ -34,16 +54,26 @@ defmodule CodeFlow.Recursion do
   create. Something like this could be used in a testing setup.
   """
   def create_customers(_number) do
-
+    do_create_customers(number, 0)
   end
 
+  defp do_create_customers(total, num) when num < total do
+    {:ok, _customer} = Customers.create(%{name: "Customer #{num}"})
+    do_create_customers(total, num + 1)
+  end
+
+  defp do_create_customers(total, _num) do
+    "Created #{total} customers!"
+  end
   @doc """
   Compute the value in the Fibonacci sequence for the number. If the number is
   "10", then the result is 10 plus the value of the 9th index of the fibonacci
   sequence.
   https://en.wikipedia.org/wiki/Fibonacci_number
   """
-  def fibonacci(_num) do
-
+  def fibonacci(0) do: 0
+  def fibonacci(1) do: 1
+  def fibonacci(num) do
+    fibonacci(num - 2) + fibonacci(num - 1)
   end
 end
