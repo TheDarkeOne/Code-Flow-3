@@ -41,7 +41,7 @@ defmodule CodeFlow.Recursion do
     do_count_active(rest, acc + 1)
   end
 
-  def do_count_active([_customer | rest], total) do
+  def do_count_active([customer | rest], total) do
     do_count_active(rest, acc)
   end
 
@@ -53,16 +53,16 @@ defmodule CodeFlow.Recursion do
   Create the desired number of customers. Provide the number of customers to
   create. Something like this could be used in a testing setup.
   """
-  def create_customers(_number) do
+  def create_customers(number) do
     do_create_customers(number, 0)
   end
 
   defp do_create_customers(total, num) when num < total do
-    {:ok, _customer} = Customers.create(%{name: "Customer #{num}"})
+    {:ok, customer} = Customers.create(%{name: "Customer #{num}"})
     do_create_customers(total, num + 1)
   end
 
-  defp do_create_customers(total, _num) do
+  defp do_create_customers(total, num) do
     "Created #{total} customers!"
   end
   @doc """

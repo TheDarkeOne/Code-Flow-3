@@ -28,7 +28,7 @@ defmodule CodeFlow.Railway do
     {:ok, user}
   end
 
-  def validate_is_active(_user) do
+  def validate_is_active(user) do
     {:error, "Not an active User"}
   end
 
@@ -36,11 +36,11 @@ defmodule CodeFlow.Railway do
     {:ok, user}
   end
 
-  def validate_at_least_age({:ok, _user}, _cutoff_age) do
+  def validate_at_least_age({:ok, user}, cutoff_age) do
     {:error, "User age is below the cutoff"}
   end
 
-  def validate_at_least_age(error, _cutoff_age), do: {:error, "Wrong"}
+  def validate_at_least_age(error, cutoff_age), do: {:error, "Wrong"}
 
   def check_name_blacklist({:ok, %User{name: name} = user}) do
     case name |> Enum.member?(["Tom", "Tim", "Tammy"]) do
@@ -50,11 +50,11 @@ defmodule CodeFlow.Railway do
     end
   end
 
-  def check_name_blacklist({:error, _reason} = error), do: {:error, "Wrong"}
+  def check_name_blacklist({:error, reason} = error), do: {:error, "Wrong"}
 
   def increment_points({:ok, %User{points: points} = user}, inc_by) do
     {:ok, %User{user | points: points + inc_by}}
   end
 
-  ef increment_points(error, _inc_by), do: {:error, "Wrong"}
+  def increment_points(error, inc_by), do: {:error, "Wrong"}
 end

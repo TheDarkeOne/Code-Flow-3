@@ -17,7 +17,7 @@ defmodule CodeFlow.With do
 
   @spec place_new_order(customer_id :: integer, item_id :: integer, quantity :: integer) ::
           {:ok, Order.t()} | {:error, String.t()}
-  def place_new_order(_customer_id, _item_id, _quantity) do
+  def place_new_order(customer_id, item_id, quantity) do
     with {:ok, customer} <- Customers.find(customer_id),
             {:ok, item} <- Items.find(item_id),
             {:ok, order} <- Orders.new(customer),

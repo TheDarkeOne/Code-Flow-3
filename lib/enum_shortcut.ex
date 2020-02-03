@@ -31,8 +31,10 @@ defmodule CodeFlow.EnumShortcut do
   @doc """
   Sum a list of OrderItems to compute the order total.
   """
-  def order_total(_order_items) do
-
+  def order_total(order_items) do
+    Enum.reduce(order_items, 0, fn %OrderItem{} = order_item, total ->
+      order_item.quantity * order_item.item.price + total
+    end)
   end
 
   @doc """
@@ -40,7 +42,10 @@ defmodule CodeFlow.EnumShortcut do
   query to an SQL database. This is just to practice conditionally incrementing
   a counter and looping using recursion.
   """
-  def count_active(_customers) do
-
+  def count_active(customers) do
+    Enum.reduce(customers, 0, fn
+      %Customer{active: true}, total -> total + 1
+      _customer, total -> total
+    end)
   end
 end
