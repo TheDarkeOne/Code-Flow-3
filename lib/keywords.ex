@@ -10,7 +10,7 @@ defmodule CodeFlow.Keywords do
   @moduledoc """
   Fix or complete the code to make the tests pass.
   """
-  # alias CodeFlow.Schemas.Item
+  alias CodeFlow.Schemas.Item
 
   def rounded(value, opts \\ []) do
     decimals = Keyword.get(opts, :decimals) || 4

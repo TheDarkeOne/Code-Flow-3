@@ -30,5 +30,6 @@ defmodule CodeFlow.Comprehension do
     for %User{active: true} = user <- users, reduce: 0 do
       acc ->
           acc + user.points
+    end
   end
 end

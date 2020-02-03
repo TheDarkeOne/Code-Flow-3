@@ -10,8 +10,9 @@ defmodule CodeFlow.Recursion do
   @moduledoc """
   Fix or complete the code to make the tests pass.
   """
-  # alias CodeFlow.Fake.Customers
-  # alias CodeFlow.Schemas.OrderItem
+  alias CodeFlow.Fake.Customers
+  alias CodeFlow.Schemas.Customer
+  alias CodeFlow.Schemas.OrderItem
 
   @doc """
   Sum a list of OrderItems to compute the order total.
@@ -37,15 +38,15 @@ defmodule CodeFlow.Recursion do
     do_count_active(customers, 0)
   end
 
-  def do_count_active([%Customers{active: true} | rest], total) do
+  def do_count_active([%Customer{active: true} | rest], acc) do
     do_count_active(rest, acc + 1)
   end
 
-  def do_count_active([customer | rest], total) do
+  def do_count_active([_customer | rest], acc) do
     do_count_active(rest, acc)
   end
 
-  defp do_count_active([], acc) do
+  def do_count_active([], acc) do
     acc
   end
 
@@ -58,11 +59,11 @@ defmodule CodeFlow.Recursion do
   end
 
   defp do_create_customers(total, num) when num < total do
-    {:ok, customer} = Customers.create(%{name: "Customer #{num}"})
+    {:ok, _customer} = Customers.create(%{name: "Customer #{num}"})
     do_create_customers(total, num + 1)
   end
 
-  defp do_create_customers(total, num) do
+  defp do_create_customers(total, _num) do
     "Created #{total} customers!"
   end
   @doc """
@@ -71,8 +72,8 @@ defmodule CodeFlow.Recursion do
   sequence.
   https://en.wikipedia.org/wiki/Fibonacci_number
   """
-  def fibonacci(0) do: 0
-  def fibonacci(1) do: 1
+  def fibonacci(0) do 0 end
+  def fibonacci(1) do 1 end
   def fibonacci(num) do
     fibonacci(num - 2) + fibonacci(num - 1)
   end

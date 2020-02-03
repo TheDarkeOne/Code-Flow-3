@@ -14,7 +14,6 @@ defmodule CodeFlow.EnumShortcut do
   alias CodeFlow.Schemas.Customer
   alias CodeFlow.Schemas.OrderItem
 
-  alias CodeFlow.Fake.Customers as: FakeCustomers
 
   @doc """
   Create the desired number of customers. Provide the number of customers to

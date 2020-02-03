@@ -28,33 +28,35 @@ defmodule CodeFlow.Railway do
     {:ok, user}
   end
 
-  def validate_is_active(user) do
+  def validate_is_active(_user) do
     {:error, "Not an active User"}
   end
 
-  def validate_at_least_age({:ok, %User{age: age} = user}, cutoff_age) when age >= cutoff_age do
+  def validate_at_least_age({:ok, %User{age: age} = user}, cutoff_age)
+  when age >= cutoff_age do
     {:ok, user}
   end
 
-  def validate_at_least_age({:ok, user}, cutoff_age) do
+  def validate_at_least_age({:ok, %User{age: _age} = _user}, _cutoff_age) do
     {:error, "User age is below the cutoff"}
   end
 
-  def validate_at_least_age(error, cutoff_age), do: {:error, "Wrong"}
+  def validate_at_least_age(error, _cutoff_age) do error end
 
-  def check_name_blacklist({:ok, %User{name: name} = user}) do
-    case name |> Enum.member?(["Tom", "Tim", "Tammy"]) do
-      true -> {:error, "User #{inspect(name)} is blacklisted"}
-
-      _ -> {:ok, "User #{inspect(name)} is not black listed"}
-    end
+  def check_name_blacklist({:ok, %User{name: name} = _user})
+    when name in ["Tom", "Tim", "Tammy"] do
+      {:error, "User #{inspect(name)} is blacklisted"}
   end
 
-  def check_name_blacklist({:error, reason} = error), do: {:error, "Wrong"}
+  def check_name_blacklist({:ok, %User{} = user}) do
+    {:ok, user}
+  end
+
+  def check_name_blacklist({:error, _reason} = error), do: error
 
   def increment_points({:ok, %User{points: points} = user}, inc_by) do
     {:ok, %User{user | points: points + inc_by}}
   end
 
-  def increment_points(error, inc_by), do: {:error, "Wrong"}
+  def increment_points(error, _inc_by) do error end
 end

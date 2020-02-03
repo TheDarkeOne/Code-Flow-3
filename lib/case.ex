@@ -15,14 +15,13 @@ defmodule CodeFlow.Case do
 
     def classify_user(user) do
       case user do
-        %User{age: nil} -> {:error, "Age required"}
+        %User{age: nil} -> {:error, "Age is required"}
 
         %User{age: age} when age >= 18 -> {:ok, :adult}
 
-        %User{age: age} when age < 18 -> {:ok, :minor}
+        %User{age: age} when age < 18 and age >= 0 -> {:ok, :minor}
 
-        _ ->
-            {:error, :invalid}
+        _ -> {:error, :invalid}
       end
     end
 
@@ -32,7 +31,7 @@ defmodule CodeFlow.Case do
           {:ok, file_contents}
 
         {:error, :enoent} ->
-          {:error, "File not found"} 
+          {:error, "File not found"}
       end
     end
 
